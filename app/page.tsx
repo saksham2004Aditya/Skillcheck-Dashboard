@@ -10,14 +10,43 @@ type CourseRow = {
 };
 
 export default async function DashboardPage() {
-  const supabase = await createSupabaseServerClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-  const { data: coursesData } = supabase
-    ? await supabase
-        .from("courses")
-        .select("id, title, progress, icon_name, created_at")
-        .order("created_at", { ascending: false })
-    : { data: null };
+  let supabase: any = null;
+  let user: any = null;
+  let coursesData: CourseRow[] | null = null;
+
+  try {
+    supabase = await createSupabaseServerClient();
+
+    if (!supabase) {
+      console.warn("SUPABASE_ENV_MISSING: server supabase client not initialized");
+    } else {
+      // Fetch user safely
+      try {
+        const userRes = await supabase.auth.getUser();
+        user = userRes?.data?.user ?? null;
+      } catch (uErr) {
+        console.error("SUPABASE_AUTH_ERROR", uErr);
+      }
+
+      // Fetch courses safely
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .select("id,title,progress,icon_name,created_at")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("SUPABASE_FETCH_ERROR", error.message ?? error);
+        } else {
+          coursesData = data as CourseRow[];
+        }
+      } catch (qErr) {
+        console.error("SUPABASE_QUERY_EXCEPTION", qErr);
+      }
+    }
+  } catch (serverErr) {
+    console.error("SERVER_RENDER_EXCEPTION", serverErr);
+  }
 
   const fallbackName =
     user?.user_metadata?.name ?? user?.email?.split("@")[0] ?? "Saksham";
