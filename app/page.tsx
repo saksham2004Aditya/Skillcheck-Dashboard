@@ -9,9 +9,18 @@ type CourseRow = {
   created_at: string;
 };
 
+type SupabaseServerClient = NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>;
+
+type SupabaseUser = {
+  email?: string | null;
+  user_metadata?: {
+    name?: string | null;
+  } | null;
+} | null;
+
 export default async function DashboardPage() {
-  let supabase: any = null;
-  let user: any = null;
+  let supabase: SupabaseServerClient | null = null;
+  let user: SupabaseUser = null;
   let coursesData: CourseRow[] | null = null;
 
   try {
@@ -50,7 +59,9 @@ export default async function DashboardPage() {
 
   const fallbackName =
     user?.user_metadata?.name ?? user?.email?.split("@")[0] ?? "Saksham";
-  const signedInLabel = user?.email ?? "No Supabase session";
+  const signedInLabel = !supabase
+    ? "Supabase not connected"
+    : user?.email ?? "Signed out of Supabase";
 
   const courses: CourseRow[] =
     coursesData && coursesData.length > 0
