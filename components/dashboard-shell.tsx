@@ -25,7 +25,7 @@ type CourseRow = {
 
 type DashboardShellProps = {
   fallbackName: string;
-  signedInLabel: string;
+  signedInLabel: string | null;
   courses: CourseRow[];
 };
 
@@ -99,7 +99,7 @@ export default function DashboardShell({
                       your progress, and continue through the next lesson flow.
                     </p>
                     <p className="mt-4 text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      Connected as {signedInLabel}
+                      {signedInLabel ? `Connected as ${signedInLabel}` : "Supabase not connected"}
                     </p>
                   </div>
 

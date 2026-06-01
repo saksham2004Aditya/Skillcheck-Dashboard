@@ -59,9 +59,7 @@ export default async function DashboardPage() {
 
   const fallbackName =
     user?.user_metadata?.name ?? user?.email?.split("@")[0] ?? "Saksham";
-  const signedInLabel = !supabase
-    ? "Supabase not connected"
-    : user?.email ?? "Signed out of Supabase";
+  const signedInLabel = supabase ? user?.email ?? null : null;
 
   const courses: CourseRow[] =
     coursesData && coursesData.length > 0
