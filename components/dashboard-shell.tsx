@@ -98,9 +98,11 @@ export default function DashboardShell({
                       You are on a 15-day streak. Pick up where you left off, review
                       your progress, and continue through the next lesson flow.
                     </p>
-                    <p className="mt-4 text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      {signedInLabel ? `Connected as ${signedInLabel}` : "Supabase not connected"}
-                    </p>
+                    {signedInLabel ? (
+                      <p className="mt-4 text-xs uppercase tracking-[0.2em] text-zinc-500">
+                        Connected as {signedInLabel}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="flex flex-wrap gap-3">
