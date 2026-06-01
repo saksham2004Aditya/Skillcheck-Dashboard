@@ -1,6 +1,6 @@
 import DashboardShell from "@/components/dashboard-shell";
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
-
+export const dynamic = "force-dynamic";
 type CourseRow = {
   id: string;
   title: string;
